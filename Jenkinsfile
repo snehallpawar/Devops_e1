@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                git 'https://github.com/<YourGitHubUsername>/devops-exam.git'
+                git 'https://github.com/snehallpawar/Devops_e1.git'
             }
         }
 
