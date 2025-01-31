@@ -1,30 +1,46 @@
-pipeline{
+pipeline {
     agent any
-    stages{
-        stage("TF Init"){
-            steps{
-                echo "Executing Terraform Init"
+    environment {
+        AWS_REGION = "ap-south-1"
+        BUCKET_NAME = "467.devops.candidate.exam"
+        STATE_KEY = "Snehal.Pawar"
+    }
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git 'https://github.com/<YourGitHubUsername>/devops-exam.git'
             }
         }
-        stage("TF Validate"){
-            steps{
-                echo "Validating Terraform Code"
+
+        stage('Terraform Init') {
+            steps {
+                sh '''
+                terraform init \
+                  -backend-config="bucket=$BUCKET_NAME" \
+                  -backend-config="region=$AWS_REGION" \
+                  -backend-config="key=$STATE_KEY"
+                '''
             }
         }
-        stage("TF Plan"){
-            steps{
-                echo "Executing Terraform Plan"
+
+        stage('Terraform Apply') {
+            steps {
+                sh 'terraform apply -auto-approve'
             }
         }
-        stage("TF Apply"){
-            steps{
-                echo "Executing Terraform Apply"
+
+        stage('Deploy Lambda') {
+            steps {
+                sh 'aws lambda update-function-code --function-name devops-exam-lambda --zip-file fileb://lambda_function.zip'
             }
         }
-        stage("Invoke Lambda"){
-            steps{
-                echo "Invoking your AWS Lambda"
+
+        stage('Invoke Lambda') {
+            steps {
+                sh 'aws lambda invoke --function-name devops-exam-lambda --log-type Tail response.json'
+                sh 'cat response.json | jq -r \'.LogResult\' | base64 --decode'
             }
         }
     }
 }
+
