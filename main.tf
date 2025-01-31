@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     bucket = "467.devops.candidate.exam"
-    key    = "Santosh.Dongare"
+    key    = "Snehal.Pawar"
     region = "ap-south-1"
   }
 }
@@ -53,7 +53,7 @@ resource "aws_lambda_function" "lambda_function" {
   role          = data.aws_iam_role.lambda.arn
   handler       = "lambda_function.lambda_handler"
   runtime       = "python3.9"
-  filename      = "C:\\lambda_function.zip"
+  filename      = "C:/lambda_function.zip"
   timeout       = 10
 
   vpc_config {
