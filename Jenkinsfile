@@ -3,10 +3,18 @@ pipeline {
 
     environment {
         AWS_REGION = 'eu-west-1'
-        TF_VAR_subnet_id = "${output.private_subnet_id}"
+      TF_VAR_subnet_id = sh(script: 'terraform output -raw private_subnet_id', returnStdout: true).trim()
     }
 
     stages {
+        stage('Verify Terraform Output') {
+    steps {
+        script {
+            sh 'terraform output private_subnet_id'
+        }
+    }
+}
+
         stage('Init') {
             steps {
                 script {
