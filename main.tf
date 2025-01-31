@@ -53,7 +53,7 @@ resource "aws_lambda_function" "lambda_function" {
   role          = data.aws_iam_role.lambda.arn
   handler       = "lambda_function.lambda_handler"
   runtime       = "python3.9"
-  filename      = "C:/Users/Santosh/Desktop/lambda_function.zip"
+  filename      = "C:\\Users\\Santosh\\Desktop\\lambda_function.zip"
   timeout       = 10
 
   vpc_config {
