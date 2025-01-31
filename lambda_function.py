@@ -41,8 +41,8 @@ def lambda_handler(event, context):
     # Payload with real details
     payload = {
         "subnet_id": private_subnet_id,
-        "name": "Santosh Jagannath Dongare",
-        "email": "santosh.dongare@example.com"
+        "name": "Snehal Laxman Pawar",
+        "email": "snehallpawar11@gmail.com"
     }
 
     try:
