@@ -9,7 +9,7 @@ terraform {
 # Private Subnet
 resource "aws_subnet" "private_subnet" {
   vpc_id            = data.aws_vpc.vpc.id
-  cidr_block        = "10.0.1.0/24"  # Change if needed
+  cidr_block        = "10.0.2.0/24"  # Change if needed
   availability_zone = "ap-south-1a"
 
   tags = {
