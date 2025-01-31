@@ -1,40 +1,33 @@
 pipeline {
     agent any
-    environment {
-        AWS_REGION = "ap-south-1"
-        BUCKET_NAME = "467.devops.candidate.exam"
-        STATE_KEY = "Snehal.Pawar"
-    }
     stages {
+        stage('Checkout SCM') {
+            steps {
+                // Explicitly use 'main' branch to avoid any confusion
+                git branch: 'main', url: 'https://github.com/snehallpawar/Devops_e1.git'
+            }
+        }
         stage('Checkout Code') {
             steps {
-                git 'https://github.com/snehallpawar/Devops_e1.git'
+                // Ensure we are checking out the correct branch (main)
+                git branch: 'main', url: 'https://github.com/snehallpawar/Devops_e1.git'
             }
         }
-
         stage('Terraform Init') {
             steps {
-                sh '''
-                terraform init \
-                  -backend-config="bucket=$BUCKET_NAME" \
-                  -backend-config="region=$AWS_REGION" \
-                  -backend-config="key=$STATE_KEY"
-                '''
+                sh 'terraform init'
             }
         }
-
         stage('Terraform Apply') {
             steps {
                 sh 'terraform apply -auto-approve'
             }
         }
-
         stage('Deploy Lambda') {
             steps {
                 sh 'aws lambda update-function-code --function-name devops-exam-lambda --zip-file fileb://lambda_function.zip'
             }
         }
-
         stage('Invoke Lambda') {
             steps {
                 sh 'aws lambda invoke --function-name devops-exam-lambda --log-type Tail response.json'
@@ -43,4 +36,3 @@ pipeline {
         }
     }
 }
-
