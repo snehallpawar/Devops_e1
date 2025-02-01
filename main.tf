@@ -101,7 +101,10 @@ resource "aws_iam_policy" "jenkins_lambda_policy" {
       {
         Effect   = "Allow"
         Action   = [
-          "iam:CreatePolicy"
+          "iam:CreatePolicy",
+          "iam:PutRolePolicy",
+          "iam:AttachRolePolicy",
+          "iam:DetachRolePolicy"
         ]
         Resource = "*"
       }
