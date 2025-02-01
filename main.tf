@@ -80,7 +80,7 @@ resource "aws_lambda_function" "lambda_function_v2" {
   }
 }
 
-# IAM policy to allow Jenkins to manage Lambda functions
+# IAM Policy for Jenkins Lambda access
 resource "aws_iam_policy" "jenkins_lambda_policy" {
   name        = "jenkins-lambda-policy"
   description = "Allow Jenkins to manage Lambda functions and tag them"
@@ -97,6 +97,13 @@ resource "aws_iam_policy" "jenkins_lambda_policy" {
           "lambda:DeleteFunction"
         ]
         Resource = "arn:aws:lambda:ap-south-1:168009530589:function:*"
+      },
+      {
+        Effect   = "Allow"
+        Action   = [
+          "iam:CreatePolicy"
+        ]
+        Resource = "*"
       }
     ]
   })
