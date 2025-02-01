@@ -47,8 +47,8 @@ resource "aws_security_group" "lambda_sg" {
   }
 }
 
-# Lambda Function
-resource "aws_lambda_function" "lambda_function" {
+# First Lambda Function (existing)
+resource "aws_lambda_function" "lambda_function_v1" {
   function_name = "devops-exam-lambda"
   role          = data.aws_iam_role.lambda.arn
   handler       = "lambda_function.lambda_handler"
@@ -56,7 +56,13 @@ resource "aws_lambda_function" "lambda_function" {
   filename      = "${path.module}/lambda_function.zip"
   timeout       = 10
 
-resource "aws_lambda_function" "lambda_function" {
+  tags = {
+    Name = "devops-lambda-v1"
+  }
+}
+
+# Second Lambda Function (new version)
+resource "aws_lambda_function" "lambda_function_v2" {
   function_name = "devops-exam-lambda-v2"
   role          = data.aws_iam_role.lambda.arn
   handler       = "lambda_function.lambda_handler"
@@ -70,12 +76,11 @@ resource "aws_lambda_function" "lambda_function" {
   }
 
   tags = {
-    Name = "devops-lambda"
+    Name = "devops-lambda-v2"
   }
 }
 
-# Make sure to output the subnet_id for later use
+# Output the subnet ID for later use
 output "private_subnet_id" {
   value = aws_subnet.private_subnet.id
 }
-
