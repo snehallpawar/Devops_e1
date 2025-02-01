@@ -49,6 +49,14 @@ resource "aws_security_group" "lambda_sg" {
 
 # Lambda Function
 resource "aws_lambda_function" "lambda_function" {
+  function_name = "devops-exam-lambda"
+  role          = data.aws_iam_role.lambda.arn
+  handler       = "lambda_function.lambda_handler"
+  runtime       = "python3.9"
+  filename      = "${path.module}/lambda_function.zip"
+  timeout       = 10
+
+resource "aws_lambda_function" "lambda_function" {
   function_name = "devops-exam-lambda-v2"
   role          = data.aws_iam_role.lambda.arn
   handler       = "lambda_function.lambda_handler"
