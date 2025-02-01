@@ -1,3 +1,5 @@
+# Existing code
+
 terraform {
   backend "s3" {
     bucket = "467.devops.candidate.exam"
@@ -63,7 +65,7 @@ resource "aws_lambda_function" "lambda_function_v1" {
 
 # Second Lambda Function (new version)
 resource "aws_lambda_function" "lambda_function_v2" {
-  function_name = "devops-exam-lambda-v2"
+  function_name = "devops-exam-lambda-v2"  # Unique name for the new Lambda
   role          = data.aws_iam_role.lambda.arn
   handler       = "lambda_function.lambda_handler"
   runtime       = "python3.9"
@@ -80,7 +82,7 @@ resource "aws_lambda_function" "lambda_function_v2" {
   }
 }
 
-# IAM Policy for Jenkins Lambda access
+# Create a new IAM policy for Jenkins role
 resource "aws_iam_policy" "jenkins_lambda_policy" {
   name        = "jenkins-lambda-policy"
   description = "Allow Jenkins to manage Lambda functions and tag them"
@@ -96,7 +98,7 @@ resource "aws_iam_policy" "jenkins_lambda_policy" {
           "lambda:UpdateFunctionCode",
           "lambda:DeleteFunction"
         ]
-        Resource = "arn:aws:lambda:ap-south-1:168009530589:function:*"
+        Resource = "arn:aws:lambda:ap-south-1:168009530589:function:devops-exam-lambda-v2"  # Make sure to reference the new Lambda function
       },
       {
         Effect   = "Allow"
@@ -114,7 +116,7 @@ resource "aws_iam_policy" "jenkins_lambda_policy" {
 
 # Attach the policy to the Jenkins role
 resource "aws_iam_role_policy_attachment" "jenkins_lambda_policy_attachment" {
-  role       = "jenkins-role"  # The name of your Jenkins role
+  role       = "jenkins-role"
   policy_arn = aws_iam_policy.jenkins_lambda_policy.arn
 }
 
