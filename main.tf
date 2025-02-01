@@ -80,6 +80,34 @@ resource "aws_lambda_function" "lambda_function_v2" {
   }
 }
 
+# IAM policy to allow Jenkins to manage Lambda functions
+resource "aws_iam_policy" "jenkins_lambda_policy" {
+  name        = "jenkins-lambda-policy"
+  description = "Allow Jenkins to manage Lambda functions and tag them"
+  policy      = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = [
+          "lambda:CreateFunction",
+          "lambda:TagResource",
+          "lambda:UpdateFunctionConfiguration",
+          "lambda:UpdateFunctionCode",
+          "lambda:DeleteFunction"
+        ]
+        Resource = "arn:aws:lambda:ap-south-1:168009530589:function:*"
+      }
+    ]
+  })
+}
+
+# Attach the policy to the Jenkins role
+resource "aws_iam_role_policy_attachment" "jenkins_lambda_policy_attachment" {
+  role       = "jenkins-role"  # The name of your Jenkins role
+  policy_arn = aws_iam_policy.jenkins_lambda_policy.arn
+}
+
 # Output the subnet ID for later use
 output "private_subnet_id" {
   value = aws_subnet.private_subnet.id
