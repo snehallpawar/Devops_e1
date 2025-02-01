@@ -6,13 +6,14 @@ pipeline {
     }
     stages {
         stage("TF Init") {
-            steps {
-                script {
-                    echo "Executing Terraform Init"
-                    sh 'terraform init'
-                }
-            }
+    steps {
+        script {
+            echo "Executing Terraform Init with Reconfigure"
+            sh 'terraform init -reconfigure'
         }
+    }
+}
+
         stage("TF Validate") {
             steps {
                 script {
